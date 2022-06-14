@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 public class GameController {
 
     List<String> list;
-    String curentCity, LastСharСity;
-    String strings = "Житомир";
+    String curentCity,LastСharСity;
+
     {
         try {
             list = Files.readAllLines(Paths.get("src/main/resources/city.txt"));
@@ -29,28 +29,39 @@ public class GameController {
     @GetMapping("/begin")
     public String begin() {
 
-//        final List<String> strings = list.stream().filter(it -> it.startsWith("А")).collect(Collectors.toList());
-//        String strings = "Житомир";
-        LastСharСity = Character.toString(strings.toUpperCase().charAt(strings.length()-1));
-        return strings + "  -"+ LastСharСity;
+        int b = list.size();
+        int random_list = (int) (Math.random() * b);
+        curentCity = list.get(random_list);
+        return curentCity.toUpperCase();
     }
 
     @GetMapping("/next")
     public String next(@RequestParam String city) {
         List<String> strings = null;
         StringBuilder strings_city = new StringBuilder(city.toUpperCase());
-        //    Проверка первой буквы -city- на последнюю  -LastСharСity-
+
+        //    перша буква - firstСharСity
         String firstСharСity = Character.toString(strings_city.charAt(0));
+        //           остання буква слова
+        LastСharСity = Character.toString(curentCity.toUpperCase().charAt(curentCity.length()-1));
+
+        // проверка на совпадение
         if (firstСharСity.equals(LastСharСity)){
-//            System.out.println("Statement  is true");
-            LastСharСity = Character.toString(strings_city.charAt(city.length()-1));
+//           остання буква слова
+            LastСharСity = Character.toString(strings_city.charAt(strings_city.length()-1));
 
             strings = list.stream().filter(it -> it.startsWith(LastСharСity)).collect(Collectors.toList());
             // рандомное число
+            int b = strings.size();
+            if (!(b == 0)) {
+            int random_list = (int) (Math.random() * b);
+            curentCity = strings.get(random_list);
+            }
+            else { return  " Вітаю Ви виграли. Кінець гри";}
 
         }else{ return  "Ігрок ввів слово не на ту літеру."; }
 
-        return "CITY: " +strings + " .. "+ LastСharСity;
+        return "CITY: " +curentCity;
     }
 
     @PostMapping("/end")
