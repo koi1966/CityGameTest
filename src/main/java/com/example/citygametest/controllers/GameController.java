@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 public class GameController {
 
     List<String> list;
-    String curentCity,LastСharСity;
+    String curentCity, LastСharСity;
 
     {
         try {
@@ -39,31 +39,34 @@ public class GameController {
     public String next(@RequestParam String city) {
         List<String> strings = null;
         StringBuilder strings_city = new StringBuilder(city.toUpperCase());
-
         //    перша буква - firstСharСity
         String firstСharСity = Character.toString(strings_city.charAt(0));
-        //           остання буква слова
-        LastСharСity = Character.toString(curentCity.toUpperCase().charAt(curentCity.length()-1));
-
+        //    остання буква слова
+        LastСharСity = Character.toString(curentCity.toUpperCase().charAt(curentCity.length() - 1));
         // проверка на совпадение
-        if (firstСharСity.equals(LastСharСity)){
-//           остання буква слова
-            LastСharСity = Character.toString(strings_city.charAt(strings_city.length()-1));
+        if (firstСharСity.equals(LastСharСity)) {
+//           остання буква слова нового міста
+            LastСharСity = Character.toString(strings_city.charAt(strings_city.length() - 1));
 
             strings = list.stream().filter(it -> it.startsWith(LastСharСity)).collect(Collectors.toList());
-            // рандомное число
+
             int b = strings.size();
             if (!(b == 0)) {
-            int random_list = (int) (Math.random() * b);
-            curentCity = strings.get(random_list);
+                int random_list = (int) (Math.random() * b);// рандомное число
+                curentCity = strings.get(random_list);// ввыпадове місто по зі списку
+            } else {
+                return " Вітаю Ви виграли. Кінець гри";// якщо в системі нема міста на цю букву
             }
-            else { return  " Вітаю Ви виграли. Кінець гри";}
 
-        }else{ return  "Ігрок ввів слово не на ту літеру."; }
+        } else {
+            return "Ігрок ввів слово не на ту літеру.";
+        }
 
-        return "CITY: " +curentCity;
+        return "CITY: " + curentCity;
     }
 
     @PostMapping("/end")
-    public String end() { return " Дякуємо за гру "; }
+    public String end() {
+        return " Дякуємо за гру ";
+    }
 }
